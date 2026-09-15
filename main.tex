@@ -1,0 +1,105 @@
+%% TeXCount directives: count the body, not the markup.
+%TC:macro \cite [option:text,text]
+%TC:macro \citep [option:text,text]
+%TC:macro \citet [option:text,text]
+%TC:envir table 0 1
+%TC:envir table* 0 1
+%TC:envir tabular [ignore] word
+%TC:envir displaymath 0 word
+%TC:envir math 0 word
+%TC:envir comment 0 0
+
+%% Camera ready: drop `anonymous, review`.
+\documentclass[sigconf, anonymous, review]{acmart}
+
+\AtBeginDocument{%
+  \providecommand\BibTeX{{%
+    Bib\TeX}}}
+
+%% SAMPLE values. Replace every line below with the ones in your ACM rights
+%% confirmation email.
+\setcopyright{acmlicensed}
+\copyrightyear{2026}
+\acmYear{2026}
+\acmDOI{XXXXXXX.XXXXXXX}
+\acmConference[Conference acronym 'XX]{Make sure to enter the correct
+  conference title from your rights confirmation email}{June 03--05,
+  2026}{Woodstock, NY}
+\acmISBN{978-1-4503-XXXX-X/2026/06}
+
+%% Only if the proceedings title differs from ``Proceedings of ...''.
+%%\acmBooktitle{Woodstock '18: ACM Symposium on Neural Gaze Detection,
+%%  June 03--05, 2018, Woodstock, NY}
+
+%% The ID the organisers give you. Printed on every page under `review`.
+%%\acmSubmissionID{123-A56-BU3}
+
+%% Numbered citations by default. SIGGRAPH venues require author-year.
+%%\citestyle{acmauthoryear}
+
+\input{src/000header}
+\input{src/001symbol}
+
+\begin{document}
+
+%% \title[short title]{full title} if it overflows the page header.
+\title{Title}
+
+%% One \author block per author; never group names or e-mails.
+\author{First Author}
+\correspondingauthor
+\email{first@example.com}
+\orcid{0000-0000-0000-0000}
+\affiliation{%
+  \institution{Institution}
+  \city{City}
+  \state{State}
+  \country{Country}
+}
+
+%% Shown in the page headers in place of the full author list.
+\renewcommand{\shortauthors}{Author et al.}
+
+\begin{abstract}
+\input{src/002abstract}
+\end{abstract}
+
+%% Generate at https://dl.acm.org/ccs and paste over the block below.
+\begin{CCSXML}
+<ccs2012>
+ <concept>
+  <concept_id>00000000.0000000.0000000</concept_id>
+  <concept_desc>Do Not Use This Code, Generate the Correct Terms for Your Paper</concept_desc>
+  <concept_significance>500</concept_significance>
+ </concept>
+</ccs2012>
+\end{CCSXML}
+
+\ccsdesc[500]{Do Not Use This Code~Generate the Correct Terms for Your Paper}
+
+\keywords{Do, Not, Use, This, Code, Put, the, Correct, Terms, for,
+  Your, Paper}
+
+\maketitle
+
+\input{src/010introduction}
+\input{src/020relatedworks}
+\input{src/030proposed}
+\input{src/040optimization}
+\input{src/050experiment}
+\input{src/060conclusion}
+
+%% Use the acks environment, not \section*{Acknowledgments}.
+% \begin{acks}
+% \end{acks}
+
+% \section*{Ethics and Privacy Statement}
+
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{refs}
+
+\appendix
+
+\input{src/100appendix}
+
+\end{document}

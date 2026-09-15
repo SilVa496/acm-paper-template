@@ -1,0 +1,80 @@
+name: Build PDF
+
+# main が更新されるたびに main.tex をコンパイルし、成果物の PDF だけを
+# pdf ブランチに置く。共同編集者は下の URL をスマホのブラウザで開けば読める。
+#
+#   https://github.com/<owner>/<repo>/blob/pdf/main.pdf
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**.tex'
+      - '**.bib'
+      - 'lib/**'
+      - '.latexmkrc'
+      - '.github/workflows/build-pdf.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# 連続で push されたときは最新のものだけを走らせる
+concurrency:
+  group: build-pdf
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compile main.tex
+        uses: xu-cheng/latex-action@v4
+        with:
+          root_file: main.tex
+          # .latexmkrc が lib/ を TEXINPUTS / BSTINPUTS の先頭に置き、
+          # 出力先を build/ にする。latexmk が bibtex も回す。
+          args: -pdf -file-line-error -halt-on-error -interaction=nonstopmode
+
+      # ビルドが落ちたときにログだけ回収できるようにしておく
+      - name: Upload log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: latex-log
+          path: build/*.log
+          if-no-files-found: ignore
+
+      - name: Publish to the pdf branch
+        run: |
+          set -eux
+          test -f build/main.pdf
+          cp build/main.pdf "$RUNNER_TEMP/main.pdf"
+
+          git config user.name  'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+          # PDF は差分圧縮が効かずリポジトリが膨らむので、履歴を持たない
+          # orphan ブランチを毎回作り直して force push する
+          git checkout --orphan pdf
+          git reset
+
+          cp "$RUNNER_TEMP/main.pdf" main.pdf
+
+          cat > README.md <<EOF
+          # Latest build
+
+          [main.pdf](main.pdf)
+
+          - source: \`${GITHUB_SHA}\`
+          - built:  $(date -u '+%Y-%m-%d %H:%M UTC')
+
+          このブランチは CI が自動生成しています。編集しても次のビルドで消えます。
+          EOF
+
+          git add -f main.pdf README.md
+          git commit -m "Build PDF from ${GITHUB_SHA::7}"
+          git push -f origin pdf

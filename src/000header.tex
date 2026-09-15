@@ -1,0 +1,120 @@
+%% ============================================================================
+%% プリアンブル。main.tex の \documentclass{acmart} の「後」に \input される。
+%%
+%% 以下は acmart.cls v2.20 が既に読み込み済み。重複して \usepackage しないこと。
+%% またここでオプションを渡すこともできない（既に読まれた後なので手遅れ）。
+%% オプションが要る場合は main.tex の \documentclass より前で
+%% \PassOptionsToPackage を使う。
+%%
+%%   amssymb  balance  booktabs  caption  comment  fancyhdr  float  fontenc
+%%   geometry  graphicx  hyperref  libertine  microtype  natbib  newtxmath
+%%   pifont  setspace  xcolor
+%%
+%% したがって \checkmark と \mathbb は amssymb、\toprule は booktabs、
+%% \ding{51} は pifont、\textcolor は xcolor から、そのまま使える。
+%% ============================================================================
+
+
+%% --- 数式 -------------------------------------------------------------------
+\usepackage{mathtools}   % 数式環境一式（amsmath を含む）、\coloneqq など
+\usepackage{bm}          % 太字の数式 \bm{x}
+
+
+%% --- 図 ---------------------------------------------------------------------
+\usepackage{subcaption}  % subfigure / subtable 環境
+\usepackage{placeins}    % \FloatBarrier で図の流れ込みを止める
+
+\graphicspath{{figs/}{figures/}}
+
+%% サブ図のラベルを (a) (b) 形式にする
+\renewcommand{\thesubfigure}{(\alph{subfigure})}
+\captionsetup[subfigure]{labelformat=simple}
+
+
+%% --- 表 ---------------------------------------------------------------------
+\usepackage{array}           % \newcolumntype、m{} / b{} 列
+\usepackage{tabularx}        % 指定幅まで伸びる X 列
+\usepackage{multirow}        % \multirow でセルの縦結合
+\usepackage{makecell}        % セル内改行 \makecell{a\\b}
+\usepackage{colortbl}        % \rowcolor / \cellcolor（xcolor は読み込み済み）
+\usepackage{threeparttable}  % 表幅に揃う脚注
+\usepackage{adjustbox}       % \adjustbox{max width=\linewidth}{...}、回転
+
+\definecolor{lightgray}{gray}{0.85}
+
+%% 幅を固定した左寄せ・中央・右寄せの列。tabularx と組み合わせて使う
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
+
+
+%% --- 数値と単位 -------------------------------------------------------------
+\usepackage{siunitx}     % \num{1234567} -> 1,234,567、\SI{3.5}{\milli\second}
+\sisetup{
+  detect-all,            % 周囲のフォントに追従させる
+  group-separator = {,},
+  table-align-uncertainty = true,
+}
+
+
+%% --- 箇条書き ---------------------------------------------------------------
+%% itemize / enumerate / description の余白や記号を調整する
+\usepackage{enumitem}
+\setlist{leftmargin=*, itemsep=2pt, topsep=2pt, parsep=0pt}
+
+
+%% --- アルゴリズム -----------------------------------------------------------
+\usepackage{algorithm}      % algorithm 環境（図表と同じくフロートになる）
+\usepackage{algpseudocode}  % \State \If \While などの擬似コード
+
+
+%% --- URL とリンク -----------------------------------------------------------
+\usepackage{xurl}        % 長い URL を任意の位置で折り返す
+
+\hypersetup{
+  colorlinks = true,
+  linkcolor  = black,
+  urlcolor   = black,
+  citecolor  = black,
+  breaklinks = true,
+}
+
+
+%% --- テキスト ---------------------------------------------------------------
+\usepackage{xspace}      % \newcommand{\sys}{FooBar\xspace} で後続の空白を保つ
+
+
+%% --- 相互参照 ---------------------------------------------------------------
+%% \cref / \Cref で参照先の種類（Figure, Table ...）を自動で補う。
+%% 上のパッケージの参照コマンドを書き換えるので、必ず最後に読み込む。
+%%   capitalise -> 「figure 1」ではなく「Figure 1」
+%%   noabbrev   -> 「Fig. 1」「Sec. 2」ではなく「Figure 1」「Section 2」
+%%   nameinlink -> 「Figure」の語もリンクに含める（数字だけをリンクにしない）
+\usepackage[capitalise, noabbrev, nameinlink]{cleveref}
+
+\crefname{subfigure}{Figure}{Figures}
+\Crefname{subfigure}{Figure}{Figures}
+\crefname{equation}{Equation}{Equations}
+\Crefname{equation}{Equation}{Equations}
+\crefname{appendix}{Appendix}{Appendices}
+\Crefname{appendix}{Appendix}{Appendices}
+\crefname{algorithm}{Algorithm}{Algorithms}
+\Crefname{algorithm}{Algorithm}{Algorithms}
+
+
+%% --- 著者定義のマクロ -------------------------------------------------------
+\newcommand{\yes}{\ensuremath{\checkmark}}
+\newcommand{\partly}{\ensuremath{\triangle}}
+\newcommand{\no}{\textemdash}
+
+%% 執筆中のメモ。\drafttrue を \draftfalse にすれば一括で消える
+\newif\ifdraft
+\drafttrue
+
+\ifdraft
+  \newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
+  \newcommand{\note}[2]{\textcolor{blue}{[#1: #2]}}
+\else
+  \newcommand{\todo}[1]{}
+  \newcommand{\note}[2]{}
+\fi
