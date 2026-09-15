@@ -12,7 +12,7 @@ src/
   010introduction.tex ... 060conclusion.tex
   100appendix.tex
 refs.bib        # 参考文献
-lib/            # acmart.cls v2.20 + ACM-Reference-Format.bst + LICENSE
+lib/            # acmart.cls v2.20 + ACM-Reference-Format.bst
 sample/         # 公式サンプル (sigconf) — 書き方のリファレンス
 .latexmkrc      # lib/ を TEXINPUTS / BSTINPUTS の先頭に置く設定
 ```
@@ -74,4 +74,19 @@ https://github.com/<owner>/<repo>/blob/pdf/main.pdf
   `acmdatamodel.dbx` を `lib/` に持ってくる。
 - クラスのドキュメント (`acmart.pdf`, `acmguide.pdf`) は同梱していない。
   <https://ctan.org/pkg/acmart> を参照。
-- `lib/LICENSE` は acmart の LGPL / LPPL ライセンス。
+
+## ライセンス
+
+LPPL 1.3c（全文は `LICENSE`）。
+
+This work may be distributed and/or modified under the conditions of the
+LaTeX Project Public License, either version 1.3 of this license or (at your
+option) any later version: <https://www.latex-project.org/lppl.txt>.
+This work has the LPPL maintenance status `maintained'.
+The Current Maintainer of this work is SilVa496.
+
+`lib/` と `sample/` は [acmart](https://ctan.org/pkg/acmart) の無改変コピーで、
+維持は upstream 側（`ACM-Reference-Format.bst` のみ public domain）。改変して
+再配布するときは `acmart.cls` / `sigconf.tex` から別名にすること。
+
+**これを使って書いた原稿と出力 PDF はライセンスの対象外**で、著者のもの。
